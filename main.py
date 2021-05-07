@@ -60,7 +60,7 @@ def cleanLink(raw_list):
 time.sleep(1)
 #print(main_in)
 
-main_nxt = soup.find("a", attrs={"class": "next"})  # TODO NEXT POST
+main_nxt = soup.find("a",attrs={"class": "next"})  # TODO NEXT POST
 #print(main_nxt)
 
 #dict_nxt = cleanBeauty(main_nxt)
@@ -75,7 +75,7 @@ class Serie():
 
         self.cartoon = ''  # <type str>
         self.ep_links= ()  # <type tuple of dicts>
-        self.episodes= []  # <type set of objects>
+        self.episodes= []  # <type list of objects>
 
     def addEpisode(self, yes):
         a = list(self.episodes).append(yes)
@@ -117,7 +117,8 @@ def createDict(raw_list):
     del desire_line[0]  # deletes "<dType"
 
     dict_line = clean4Dict(desire_line)
-    print(dict_line)
+    #print(dict_line)
+
     #       ".mp4" link <str>, next-post url <str>.
 
     # TODO method para hallar el next-post.
@@ -125,7 +126,7 @@ def createDict(raw_list):
     return dict_line  #dictionary
 
 
-def webLink(web_link):
+def webLink(web_url):
     r = requests.get(web_url)
     # print(r.status_code)
     soup = BeautifulSoup(r.content, "html.parser")
@@ -134,12 +135,6 @@ def webLink(web_link):
     nextpost=  soup.find("a", attrs={"class": "next"})  # TODO NEXT POST)
 
     return createDict(main_in)["value"], createDict(nextpost)["href"]
-
-
-def linkNext(post):
-
-
-    return
 
 
 # LIMPIEZA DE CAPITULOS con el mismo link del 1er capitulo.
@@ -154,7 +149,7 @@ for i in range(len(chapters_rawlist)):
     aux_crl[-1][2] = aux_crl[-1][2].split('><i ')
     aux_crl[-1][2] = aux_crl[-1][2][0]
 
-print(aux_crl)
+#print(aux_crl)
 aa = []
 for i in range(len(aux_crl)):
     aaa = []
@@ -182,15 +177,29 @@ for z in range(len(aa) -1):
 ver = Serie()
 ver.cartoon = "Samurai Jack"
 ver.ep_links= tuple(chapters_list)
-print(ver.ep_links)
+#print(ver.ep_links)
+vurls, cname, nextp = []
 for i in range(len(ver.ep_links)):
     ex_dato = ver.ep_links[i]
 
     ver.episodes.append(ver.Episode(ex_dato))
     a = ver.episodes
+    print(a[-1])
+    print(a[-1].vurl + "\t" + a[-1].name + a[-1].next)
     
-	#print(a[-1])  # Class storage Obj.
-    print(a[-1].vurl + "\t" + a[-1].name + '\n')
-    #ver.ep_links[i][1] = ver.episodes[i][1]  # clean dict.
-
+    vurls.append(a[-1].vurl)
+    cname.append(a[-1].name)
+    nextp.append(a[-1].next)
+    
     time.sleep(0.5)
+
+import pandas
+
+#Domain = ["IT", "DATA_SCIENCE", "NEYWORKING"]
+
+domain_dict = {'Mp4 URLs': vurls, 'Episode': cname, 'Next C.': nextp}
+print(domain_dict)
+
+data_frame = pandas.DataFrame(domain_dict)
+
+#data_frame.to_csv(ver.cartoon + '.csv')
