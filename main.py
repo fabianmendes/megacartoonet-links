@@ -11,63 +11,6 @@ r = requests.get(web_url)
 print(r.status_code)
 soup = BeautifulSoup(r.content, "html.parser")
 
-#main_nxt =  TODO: Poner aqui el main_nxt. CREATES A Class, SERIE, Episode.
-# TODO Create a def Next web_page.
-
-
-# example for try:
-# <header class="dark-div">
-main_in = soup.find("input", attrs={"type": "hidden"})  # TODO CURRENT POST
-# <input type="hidden" name="main_video_url" value="https://www.megacartoons.net/video/Samurai-Jack-I-The-Beginning.mp4">
-
-main_list=str(main_in).split(">")
-#print(main_list)
-
-main_input= main_list[0].split(" ")
-del main_input[0] #deletes '<input'
-#print(main_input)
-# -------- Cleaning to Dictionary.
-main_inputdict = {}
-aux = []
-
-# clean to..
-for i in range(len(main_input)):
-    aux = main_input[i].split("=")
-    aux[1] = aux[1].replace('"', '')  # deletes "
-    main_inputdict[aux[0]] = aux[1]
-    # my_dict['name']='Nick'
-# ..dictionary.
-
-
-'''
-def cleanLink(raw_list):
-    #raw_ soup.find("
-    
-    raw_line = str(raw_list).split(">")
-
-    desire_line = raw_line[0].split(" ")
-    del desire_line[0]  # deletes "<dType"
-
-    dict_line = createDict(desire_line)
-
-    #       ".mp4" link <str>, next-post url <str>.
-    return dict_line['value'], dict_line['href']
-'''
-
-#print(dict_line)
-#print(dict_line['value'])
-# Link del video (".mp4") ^ .
-time.sleep(1)
-#print(main_in)
-
-main_nxt = soup.find("a",attrs={"class": "next"})  # TODO NEXT POST
-#print(main_nxt)
-
-#dict_nxt = cleanBeauty(main_nxt)
-#print(dict_nxt)
-#print(dict_nxt['href'])
-
-#print(soup)
 
 class Serie():
 
@@ -76,10 +19,6 @@ class Serie():
         self.cartoon = ''  # <type str>
         self.ep_links= ()  # <type tuple of dicts>
         self.episodes= []  # <type list of objects>
-
-    def addEpisode(self, yes):
-        a = list(self.episodes).append(yes)
-        # self.episodes = set(a)
 
 
     class Episode():
@@ -184,14 +123,14 @@ for i in range(len(ver.ep_links)):
 
     ver.episodes.append(ver.Episode(ex_dato))
     a = ver.episodes
-    print(a[-1])
-    print(a[-1].vurl + "\t" + a[-1].name + a[-1].next)
+    #print(a[-1])
+    #print(a[-1].vurl + "\t" + a[-1].name + a[-1].next)
     
     vurls.append(a[-1].vurl)
     cname.append(a[-1].name)
     nextp.append(a[-1].next)
     
-    time.sleep(0.5)
+    #time.sleep(0.5)
 
 import pandas
 
