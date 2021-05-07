@@ -57,7 +57,7 @@ def cleanLink(raw_list):
 #print(dict_line)
 #print(dict_line['value'])
 # Link del video (".mp4") ^ .
-time.sleep(1)
+
 #print(main_in)
 
 main_nxt = soup.find("a", attrs={"class": "next"})  # TODO NEXT POST
@@ -77,10 +77,11 @@ class Serie():
         self.ep_links= ()  # <type tuple of dicts>
         self.episodes= []  # <type set of objects>
 
+	''''
     def addEpisode(self, yes):
         a = list(self.episodes).append(yes)
         # self.episodes = set(a)
-
+	''''
 
     class Episode():
 
@@ -117,7 +118,7 @@ def createDict(raw_list):
     del desire_line[0]  # deletes "<dType"
 
     dict_line = clean4Dict(desire_line)
-    print(dict_line)
+    #print(dict_line)
     #       ".mp4" link <str>, next-post url <str>.
 
     # TODO method para hallar el next-post.
@@ -136,12 +137,6 @@ def webLink(web_link):
     return createDict(main_in)["value"], createDict(nextpost)["href"]
 
 
-def linkNext(post):
-
-
-    return
-
-
 # LIMPIEZA DE CAPITULOS con el mismo link del 1er capitulo.
 chapters_raw = soup.find("ul", attrs={"class": "video-series-list list-inline"})
 #print(chapters_raw)
@@ -154,7 +149,7 @@ for i in range(len(chapters_rawlist)):
     aux_crl[-1][2] = aux_crl[-1][2].split('><i ')
     aux_crl[-1][2] = aux_crl[-1][2][0]
 
-print(aux_crl)
+#print(aux_crl)
 aa = []
 for i in range(len(aux_crl)):
     aaa = []
@@ -182,7 +177,7 @@ for z in range(len(aa) -1):
 ver = Serie()
 ver.cartoon = "Samurai Jack"
 ver.ep_links= tuple(chapters_list)
-print(ver.ep_links)
+#print(ver.ep_links)
 for i in range(len(ver.ep_links)):
     ex_dato = ver.ep_links[i]
 
@@ -193,4 +188,4 @@ for i in range(len(ver.ep_links)):
     print(a[-1].vurl + "\t" + a[-1].name + '\n')
     #ver.ep_links[i][1] = ver.episodes[i][1]  # clean dict.
 
-    time.sleep(0.5)
+    #time.sleep(0.5)
