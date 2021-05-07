@@ -93,25 +93,56 @@ class Serie():
         a = list(self.episodes).append(yes)
         # self.episodes = set(a)
 
+
     class Episode():
 
         def __init__(self, dictionary):
 
             self.name = dictionary['title']  # name of dictionary.
             #Serie.addEpisode(self.name)
+
             #self.vurl = dictionary['value']
             self.vurl, self.next = webLink(dictionary['href'])
+            #       ".mp4" link <str>, next-post url <str>.
             #self.next = dictionary['href']
 
-        def webLink(self, link):
-            r = requests.get(web_url)
-            # print(r.status_code)
-            soup = BeautifulSoup(r.content, "html.parser")
-            main_in = soup.find("input", attrs={"type": "hidden"})
 
-            return createLink(main_in)
+def createDict(lista):
+    #	creates dictionary:
+    dict_line = {}
+    aux = []
+
+    for i in range(len(lista)):
+        aux = lista[i].split('=')
+        aux[1] = aux[1].replace('"', '')
+
+        dict_line[aux[0]] = aux[1]
+    return dict_line
 
 
+def createLink(raw_list):
+    '''raw_ soup.find("
+    '''
+    raw_line = str(raw_list).split(">")
+
+    desire_line = raw_line[0].split(" ")
+    del desire_line[0]  # deletes "<dType"
+
+    dict_line = createDict(desire_line)
+    print(dict_line)
+    #       ".mp4" link <str>, next-post url <str>.
+    
+    # TODO method para hallar el next-post.
+    return dict_line['value'], dict_line['href']
+
+
+def webLink(web_link):
+    r = requests.get(web_url)
+    # print(r.status_code)
+    soup = BeautifulSoup(r.content, "html.parser")
+    main_in = soup.find("input", attrs={"type": "hidden"})
+
+    return createLink(main_in)
 
 # LIMPIEZA DE CAPITULOS con el mismo link del 1er capitulo.
 chapters_raw = soup.find("ul", attrs={"class": "video-series-list list-inline"})
