@@ -176,8 +176,8 @@ for z in range(len(aa) -1):
     dict_aux[aa[z][1][0]] = aa[z][1][1]  # title= name (chapter)
     chapters_list.append(dict_aux)
 
-print(aa)
-print(chapters_list)
+#print(aa)
+#print(chapters_list)
 
 ver = Serie()
 ver.cartoon = "Samurai Jack"
@@ -188,8 +188,9 @@ for i in range(len(ver.ep_links)):
 
     ver.episodes.append(ver.Episode(ex_dato))
     a = ver.episodes
-    print(a[-1])
-    print(a[-1].vurl + "\t" + a[-1].name)
+    
+	#print(a[-1])  # Class storage Obj.
+    print(a[-1].vurl + "\t" + a[-1].name + '\n')
     #ver.ep_links[i][1] = ver.episodes[i][1]  # clean dict.
 
     time.sleep(0.5)
