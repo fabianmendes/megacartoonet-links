@@ -18,7 +18,11 @@ class Serie():
 
         self.cartoon = ''  # <type str>
         self.ep_links= ()  # <type tuple of dicts>
-        self.episodes= []  # <type list of objects>
+        self.episodes= []  # <type set of objects>
+
+    def addEpisode(self, yes):
+        a = list(self.episodes).append(yes)
+        # self.episodes = set(a)
 
 
     class Episode():
@@ -29,6 +33,7 @@ class Serie():
             #Serie.addEpisode(self.name)
 
             #self.vurl = dictionary['value']
+
             self.vurl, self.next = webLink(dictionary['href'])
             #       ".mp4" link <str>, next-post url <str>.
             #self.next = dictionary['href']
@@ -57,7 +62,6 @@ def createDict(raw_list):
 
     dict_line = clean4Dict(desire_line)
     #print(dict_line)
-
     #       ".mp4" link <str>, next-post url <str>.
 
     # TODO method para hallar el next-post.
@@ -65,15 +69,21 @@ def createDict(raw_list):
     return dict_line  #dictionary
 
 
-def webLink(web_url):
-    r = requests.get(web_url)
+def webLink(web_link):
+    r = requests.get(web_link)
     # print(r.status_code)
     soup = BeautifulSoup(r.content, "html.parser")
     main_in = soup.find("input", attrs={"type": "hidden"})
 
-    nextpost=  soup.find("a", attrs={"class": "next"})  # TODO NEXT POST)
+    nextpost = soup.find("a", attrs={"class": "next"})
 
     return createDict(main_in)["value"], createDict(nextpost)["href"]
+
+
+def linkNext(post):
+
+
+    return
 
 
 # LIMPIEZA DE CAPITULOS con el mismo link del 1er capitulo.
@@ -117,28 +127,23 @@ ver = Serie()
 ver.cartoon = "Samurai Jack"
 ver.ep_links= tuple(chapters_list)
 #print(ver.ep_links)
-vurls, cname, nextp = []
+vurls, cname, nextp = [], [], []
 for i in range(len(ver.ep_links)):
     ex_dato = ver.ep_links[i]
 
     ver.episodes.append(ver.Episode(ex_dato))
     a = ver.episodes
     #print(a[-1])
-    #print(a[-1].vurl + "\t" + a[-1].name + a[-1].next)
-    
+    #print(a[-1].vurl + "\t" + a[-1].name + " " + a[-1].next)
+
     vurls.append(a[-1].vurl)
     cname.append(a[-1].name)
     nextp.append(a[-1].next)
-    
-    #time.sleep(0.5)
+
+    time.sleep(0.5)
 
 import pandas
-
 #Domain = ["IT", "DATA_SCIENCE", "NEYWORKING"]
-
 domain_dict = {'Mp4 URLs': vurls, 'Episode': cname, 'Next C.': nextp}
-print(domain_dict)
-
 data_frame = pandas.DataFrame(domain_dict)
-
-#data_frame.to_csv(ver.cartoon + '.csv')
+data_frame.to_csv(ver.cartoon + '.csv', ' ')
