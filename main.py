@@ -11,8 +11,6 @@ r = requests.get(web_url)
 print(r.status_code)
 soup = BeautifulSoup(r.content, "html.parser")
 
-#print(soup)
-
 class Serie():
 
     def __init__(self):
@@ -30,6 +28,7 @@ class Serie():
             #Serie.addEpisode(self.name)
 
             #self.vurl = dictionary['value']
+
             self.vurl, self.next = webLink(dictionary['href'])
             #       ".mp4" link <str>, next-post url <str>.
             #self.next = dictionary['href']
@@ -66,12 +65,12 @@ def createDict(raw_list):
 
 
 def webLink(web_link):
-    r = requests.get(web_url)
+    r = requests.get(web_link)
     # print(r.status_code)
     soup = BeautifulSoup(r.content, "html.parser")
     main_in = soup.find("input", attrs={"type": "hidden"})
 
-    nextpost=  soup.find("a", attrs={"class": "next"})  # TODO NEXT POST)
+    nextpost = soup.find("a", attrs={"class": "next"})
 
     return createDict(main_in)["value"], createDict(nextpost)["href"]
 
@@ -117,14 +116,27 @@ ver = Serie()
 ver.cartoon = "Samurai Jack"
 ver.ep_links= tuple(chapters_list)
 #print(ver.ep_links)
+
+vurls, cname, nextp = [], [], []
+
 for i in range(len(ver.ep_links)):
     ex_dato = ver.ep_links[i]
 
     ver.episodes.append(ver.Episode(ex_dato))
     a = ver.episodes
-    
-	#print(a[-1])  # Class storage Obj.
-    print(a[-1].vurl + "\t" + " " + a[-1].name + '\n')
-    #ver.ep_links[i][1] = ver.episodes[i][1]  # clean dict.
 
-    #time.sleep(0.5)
+    #print(a[-1])
+    #print(a[-1].vurl + "\t" + a[-1].name + " " + a[-1].next)
+
+    vurls.append(a[-1].vurl)
+    cname.append(a[-1].name)
+    nextp.append(a[-1].next)
+
+    time.sleep(0.5)
+
+import pandas
+#Domain = ["IT", "DATA_SCIENCE", "NEYWORKING"]
+domain_dict = {'Mp4 URLs': vurls, 'Episode': cname, 'Next C.': nextp}
+data_frame = pandas.DataFrame(domain_dict)
+data_frame.to_csv(ver.cartoon + '.csv', ' ')
+
