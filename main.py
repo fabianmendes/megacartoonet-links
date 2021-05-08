@@ -90,6 +90,7 @@ class Serie():
             #Serie.addEpisode(self.name)
 
             #self.vurl = dictionary['value']
+
             self.vurl, self.next = webLink(dictionary['href'])
             #       ".mp4" link <str>, next-post url <str>.
             #self.next = dictionary['href']
@@ -117,7 +118,7 @@ def createDict(raw_list):
     del desire_line[0]  # deletes "<dType"
 
     dict_line = clean4Dict(desire_line)
-    print(dict_line)
+    #print(dict_line)
     #       ".mp4" link <str>, next-post url <str>.
 
     # TODO method para hallar el next-post.
@@ -126,12 +127,12 @@ def createDict(raw_list):
 
 
 def webLink(web_link):
-    r = requests.get(web_url)
+    r = requests.get(web_link)
     # print(r.status_code)
     soup = BeautifulSoup(r.content, "html.parser")
     main_in = soup.find("input", attrs={"type": "hidden"})
 
-    nextpost=  soup.find("a", attrs={"class": "next"})  # TODO NEXT POST)
+    nextpost = soup.find("a", attrs={"class": "next"})
 
     return createDict(main_in)["value"], createDict(nextpost)["href"]
 
@@ -154,7 +155,7 @@ for i in range(len(chapters_rawlist)):
     aux_crl[-1][2] = aux_crl[-1][2].split('><i ')
     aux_crl[-1][2] = aux_crl[-1][2][0]
 
-print(aux_crl)
+#print(aux_crl)
 aa = []
 for i in range(len(aux_crl)):
     aaa = []
@@ -176,20 +177,70 @@ for z in range(len(aa) -1):
     dict_aux[aa[z][1][0]] = aa[z][1][1]  # title= name (chapter)
     chapters_list.append(dict_aux)
 
-print(aa)
-print(chapters_list)
+#print(aa)
+#print(chapters_list)
 
 ver = Serie()
 ver.cartoon = "Samurai Jack"
 ver.ep_links= tuple(chapters_list)
-print(ver.ep_links)
+#print(ver.ep_links)
+vurls, cname, nextp = [], [], []
 for i in range(len(ver.ep_links)):
     ex_dato = ver.ep_links[i]
 
     ver.episodes.append(ver.Episode(ex_dato))
     a = ver.episodes
     print(a[-1])
-    print(a[-1].vurl + "\t" + a[-1].name)
-    #ver.ep_links[i][1] = ver.episodes[i][1]  # clean dict.
+    print(a[-1].vurl + "\t" + a[-1].name + " " + a[-1].next)
+
+    vurls.append(a[-1].vurl)
+    cname.append(a[-1].name)
+    nextp.append(a[-1].next)
 
     time.sleep(0.5)
+
+#import pandas
+
+#Domain = ["IT", "DATA_SCIENCE", "NEYWORKING"]
+
+domain_dict = {'Mp4 URLs': vurls, 'Episode': cname, 'Next C.': nextp}
+#print(domain_dict)
+
+#data_frame = pandas.DataFrame(domain_dict)
+
+#data_frame.to_csv(ver.cartoon + '.csv')
+
+from xml.etree.ElementTree import Element as ele, SubElement as subele
+#from ElementTree_pretty import prettify
+
+inputLink = '.mp4'  # It's parameter of funct.
+top = 'playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1"'
+playlist = ele(top)
+list_rep = subele(playlist, 'title')
+list_rep.text = "Lista de reproducción"
+
+play_list = subele(playlist, 'trackList')
+# repetir desde aqui ----- \/ , iterations.
+pista = subele(play_list, 'track')  # TRACK
+lugar = subele(pista, 'location')
+lugar.text = inputLink  #TODO def parameter.
+ext_app = 'extension application="http://www.videolan.org/vlc/playlist/0"'
+extensionapp = subele(pista, ext_app)
+
+vlc_id = subele(extensionapp, 'vlc:id')
+vlc_id.text = '0'  # IMPORTANT, Nro track!!
+# TODO ^  position of the list!!
+vlc_opt = subele(extensionapp, 'vlc:option')
+vlc_opt.text = 'network-caching=1000'
+
+# --- extension (o)ut o(f) trackLis(t): ~~~|
+extensionapp_oft = subele(play_list, ext_app)
+# items:
+# <vlc:item tid="nro_idex_list_inputLink"/>
+# for...
+trackid = None
+#TODO trackid = position.
+inside_i = 'vlc:item tid="' + trackid + '"/'
+vlc_item = subele(extensionapp_oft, inside_i)
+
+print(playlist)  # print prittify(playlist)
