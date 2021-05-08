@@ -124,7 +124,7 @@ for i in range(len(ver.ep_links)):
     a = ver.episodes
     
 	#print(a[-1])  # Class storage Obj.
-    print(a[-1].vurl + "\t" + a[-1].name + '\n')
+    print(a[-1].vurl + "\t" + " " + a[-1].name + '\n')
     #ver.ep_links[i][1] = ver.episodes[i][1]  # clean dict.
 
     #time.sleep(0.5)
