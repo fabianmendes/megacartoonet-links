@@ -11,7 +11,6 @@ r = requests.get(web_url)
 print(r.status_code)
 soup = BeautifulSoup(r.content, "html.parser")
 
-
 class Serie():
 
     def __init__(self):
@@ -19,10 +18,6 @@ class Serie():
         self.cartoon = ''  # <type str>
         self.ep_links= ()  # <type tuple of dicts>
         self.episodes= []  # <type set of objects>
-
-    def addEpisode(self, yes):
-        a = list(self.episodes).append(yes)
-        # self.episodes = set(a)
 
 
     class Episode():
@@ -80,12 +75,6 @@ def webLink(web_link):
     return createDict(main_in)["value"], createDict(nextpost)["href"]
 
 
-def linkNext(post):
-
-
-    return
-
-
 # LIMPIEZA DE CAPITULOS con el mismo link del 1er capitulo.
 chapters_raw = soup.find("ul", attrs={"class": "video-series-list list-inline"})
 #print(chapters_raw)
@@ -127,12 +116,15 @@ ver = Serie()
 ver.cartoon = "Samurai Jack"
 ver.ep_links= tuple(chapters_list)
 #print(ver.ep_links)
+
 vurls, cname, nextp = [], [], []
+
 for i in range(len(ver.ep_links)):
     ex_dato = ver.ep_links[i]
 
     ver.episodes.append(ver.Episode(ex_dato))
     a = ver.episodes
+
     #print(a[-1])
     #print(a[-1].vurl + "\t" + a[-1].name + " " + a[-1].next)
 
@@ -147,3 +139,4 @@ import pandas
 domain_dict = {'Mp4 URLs': vurls, 'Episode': cname, 'Next C.': nextp}
 data_frame = pandas.DataFrame(domain_dict)
 data_frame.to_csv(ver.cartoon + '.csv', ' ')
+
