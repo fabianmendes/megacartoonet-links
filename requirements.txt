@@ -1,7 +1,0 @@
-beautifulsoup4
-bs4
-pandas
-pandas-stubs	
-requests	
-setuptools
-urllib3
