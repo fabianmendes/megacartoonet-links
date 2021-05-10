@@ -124,7 +124,6 @@ for i in range(len(ver.ep_links)):
 
     ver.episodes.append(ver.Episode(ex_dato))
     a = ver.episodes
-
     #print(a[-1])
     #print(a[-1].vurl + "\t" + a[-1].name + " " + a[-1].next)
 
@@ -132,11 +131,68 @@ for i in range(len(ver.ep_links)):
     cname.append(a[-1].name)
     nextp.append(a[-1].next)
 
-    time.sleep(0.5)
+    #time.sleep(0.5)
 
-import pandas
+#import pandas
+# PANDAS: -----------------------------------------
 #Domain = ["IT", "DATA_SCIENCE", "NEYWORKING"]
+
 domain_dict = {'Mp4 URLs': vurls, 'Episode': cname, 'Next C.': nextp}
-data_frame = pandas.DataFrame(domain_dict)
-data_frame.to_csv(ver.cartoon + '.csv', ' ')
+#print(domain_dict)
+#data_frame = pandas.DataFrame(domain_dict)
+#data_frame.to_csv(ver.cartoon + '.csv')
+#--------------------------------------------------
+from xml.etree.ElementTree import Element as ele, SubElement as subele
+import xml.etree.ElementTree as xee
+
+inputLink = '.mp4'  # It's parameter of funct.
+#top = 'playlist'
+playlist = ele('playlist')  # (top)
+playlist.set('xmlns', "http://xspf.org/ns/0/")
+playlist.set('xmlns:vlc', "http://www.videolan.org/vlc/playlist/ns/0/")
+playlist.set('version', "1")
+list_rep = subele(playlist, 'title')
+list_rep.text = "Lista de reproducción"
+
+play_list = subele(playlist, 'trackList')
+# repetir desde aqui ----- \/ , iterations.
+pista = subele(play_list, 'track')  # TRACK
+lugar = subele(pista, 'location')
+lugar.text = inputLink  #TODO def parameter.
+ext_app = "http://www.videolan.org/vlc/playlist/0"
+extensionapp = subele(pista, 'extension')
+extensionapp.set('application', ext_app)
+
+vlc_id = subele(extensionapp, 'vlc:id')
+vlc_id.text = '0'  # IMPORTANT, Nro track!!
+# TODO ^  position of the list!!
+vlc_opt = subele(extensionapp, 'vlc:option')
+vlc_opt.text = 'network-caching=1000'
+
+# --- extension (o)ut o(f) trackLis(t): ~~~|
+extensionapp_oft = subele(playlist, 'extension')
+extensionapp_oft.set('application', ext_app)
+# items:
+# <vlc:item tid="nro_idex_list_inputLink"/>
+# for...
+trackid = 'None'
+#TODO trackid = position.
+inside_i = 'vlc:item tid="' + trackid + '"'
+vlc_item = subele(extensionapp_oft, inside_i)
+
+print(playlist)  # print prittify(playlist)
+
+#print(etree.tostring(playlist, encoding='unicode', pretty_print=True))
+# create a new XML file with the results
+
+#tree = ET.ElementTree(vehicles)
+#tree.write("vehicle_file.xml", xml_declaration=True, encoding='utf-8', method="xml")
+# ^ code from https://norwied.wordpress.com/2013/08/27/307/
+mydata = xee.ElementTree(playlist)
+mydata.write(ver.cartoon + ".xml",  # Serie!
+             xml_declaration=True,
+             encoding='utf-8', method="xml")
+# \/ this prints the same as saved below ^.
+print(mydata)
+
 
