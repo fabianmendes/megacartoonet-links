@@ -200,7 +200,7 @@ for i in range(len(ver.ep_links)):
     #time.sleep(0.5)
 
 #import pandas
-
+# PANDAS:
 #Domain = ["IT", "DATA_SCIENCE", "NEYWORKING"]
 
 domain_dict = {'Mp4 URLs': vurls, 'Episode': cname, 'Next C.': nextp}
@@ -257,9 +257,8 @@ print(playlist)  # print prittify(playlist)
 #tree.write("vehicle_file.xml", xml_declaration=True, encoding='utf-8', method="xml")
 # ^ code from https://norwied.wordpress.com/2013/08/27/307/
 mydata = xee.ElementTree(playlist)
-mydata.write("vehicle_file.xml",
-          xml_declaration=True,
-          encoding='utf-8', method="xml")
-#print(mydata)
-#myfile = open("megatry.xml", "w")
-#myfile.write(mydata)
+mydata.write(ver.cartoon + ".xml",  # Serie!
+             xml_declaration=True,
+             encoding='utf-8', method="xml")
+# \/ this prints the same as saved below ^.
+print(mydata)
