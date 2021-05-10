@@ -252,8 +252,14 @@ print(playlist)  # print prittify(playlist)
 
 #print(etree.tostring(playlist, encoding='unicode', pretty_print=True))
 # create a new XML file with the results
-mydata = xee.tostring(playlist, encoding='utf8', method='xml')
-#thanks to "Martijn Pieters♦" at https://stackoverflow.com/questions/15304229/convert-python-elementtree-to-string/15304351#15304351
-print(mydata)
-myfile = open("megatry.xml", "w")
-myfile.write(mydata)
+
+#tree = ET.ElementTree(vehicles)
+#tree.write("vehicle_file.xml", xml_declaration=True, encoding='utf-8', method="xml")
+# ^ code from https://norwied.wordpress.com/2013/08/27/307/
+mydata = xee.ElementTree(playlist)
+mydata.write("vehicle_file.xml",
+          xml_declaration=True,
+          encoding='utf-8', method="xml")
+#print(mydata)
+#myfile = open("megatry.xml", "w")
+#myfile.write(mydata)
