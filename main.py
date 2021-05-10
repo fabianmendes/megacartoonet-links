@@ -222,9 +222,9 @@ playlist.set('version', "1")
 list_rep = subele(playlist, 'title')
 list_rep.text = "Lista de reproducción"
 
-playlist = subele(playlist, 'trackList')
+play_list = subele(playlist, 'trackList')
 # repetir desde aqui ----- \/ , iterations.
-pista = subele(playlist, 'track')  # TRACK
+pista = subele(play_list, 'track')  # TRACK
 lugar = subele(pista, 'location')
 lugar.text = inputLink  #TODO def parameter.
 ext_app = "http://www.videolan.org/vlc/playlist/0"
@@ -238,13 +238,14 @@ vlc_opt = subele(extensionapp, 'vlc:option')
 vlc_opt.text = 'network-caching=1000'
 
 # --- extension (o)ut o(f) trackLis(t): ~~~|
-extensionapp_oft = subele(play_list, ext_app)
+extensionapp_oft = subele(playlist, 'extension')
+extensionapp_oft.set('application', ext_app)
 # items:
 # <vlc:item tid="nro_idex_list_inputLink"/>
 # for...
 trackid = 'None'
 #TODO trackid = position.
-inside_i = 'vlc:item tid="' + trackid + '"/'
+inside_i = 'vlc:item tid="' + trackid + '"'
 vlc_item = subele(extensionapp_oft, inside_i)
 
 print(playlist)  # print prittify(playlist)
