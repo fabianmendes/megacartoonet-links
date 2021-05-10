@@ -11,64 +11,6 @@ r = requests.get(web_url)
 print(r.status_code)
 soup = BeautifulSoup(r.content, "html.parser")
 
-#main_nxt =  TODO: Poner aqui el main_nxt. CREATES A Class, SERIE, Episode.
-# TODO Create a def Next web_page.
-
-
-# example for try:
-# <header class="dark-div">
-main_in = soup.find("input", attrs={"type": "hidden"})  # TODO CURRENT POST
-# <input type="hidden" name="main_video_url" value="https://www.megacartoons.net/video/Samurai-Jack-I-The-Beginning.mp4">
-
-main_list=str(main_in).split(">")
-#print(main_list)
-
-main_input= main_list[0].split(" ")
-del main_input[0] #deletes '<input'
-#print(main_input)
-# -------- Cleaning to Dictionary.
-main_inputdict = {}
-aux = []
-
-# clean to..
-for i in range(len(main_input)):
-    aux = main_input[i].split("=")
-    aux[1] = aux[1].replace('"', '')  # deletes "
-    main_inputdict[aux[0]] = aux[1]
-    # my_dict['name']='Nick'
-# ..dictionary.
-
-
-'''
-def cleanLink(raw_list):
-    #raw_ soup.find("
-    
-    raw_line = str(raw_list).split(">")
-
-    desire_line = raw_line[0].split(" ")
-    del desire_line[0]  # deletes "<dType"
-
-    dict_line = createDict(desire_line)
-
-    #       ".mp4" link <str>, next-post url <str>.
-    return dict_line['value'], dict_line['href']
-'''
-
-#print(dict_line)
-#print(dict_line['value'])
-# Link del video (".mp4") ^ .
-time.sleep(1)
-#print(main_in)
-
-main_nxt = soup.find("a", attrs={"class": "next"})  # TODO NEXT POST
-#print(main_nxt)
-
-#dict_nxt = cleanBeauty(main_nxt)
-#print(dict_nxt)
-#print(dict_nxt['href'])
-
-#print(soup)
-
 class Serie():
 
     def __init__(self):
@@ -76,10 +18,6 @@ class Serie():
         self.cartoon = ''  # <type str>
         self.ep_links= ()  # <type tuple of dicts>
         self.episodes= []  # <type set of objects>
-
-    def addEpisode(self, yes):
-        a = list(self.episodes).append(yes)
-        # self.episodes = set(a)
 
 
     class Episode():
@@ -137,12 +75,6 @@ def webLink(web_link):
     return createDict(main_in)["value"], createDict(nextpost)["href"]
 
 
-def linkNext(post):
-
-
-    return
-
-
 # LIMPIEZA DE CAPITULOS con el mismo link del 1er capitulo.
 chapters_raw = soup.find("ul", attrs={"class": "video-series-list list-inline"})
 #print(chapters_raw)
@@ -184,14 +116,16 @@ ver = Serie()
 ver.cartoon = "Samurai Jack"
 ver.ep_links= tuple(chapters_list)
 #print(ver.ep_links)
+
 vurls, cname, nextp = [], [], []
+
 for i in range(len(ver.ep_links)):
     ex_dato = ver.ep_links[i]
 
     ver.episodes.append(ver.Episode(ex_dato))
     a = ver.episodes
-    print(a[-1])
-    print(a[-1].vurl + "\t" + a[-1].name + " " + a[-1].next)
+    #print(a[-1])
+    #print(a[-1].vurl + "\t" + a[-1].name + " " + a[-1].next)
 
     vurls.append(a[-1].vurl)
     cname.append(a[-1].name)
@@ -200,16 +134,14 @@ for i in range(len(ver.ep_links)):
     #time.sleep(0.5)
 
 #import pandas
-# PANDAS:
+# PANDAS: -----------------------------------------
 #Domain = ["IT", "DATA_SCIENCE", "NEYWORKING"]
 
 domain_dict = {'Mp4 URLs': vurls, 'Episode': cname, 'Next C.': nextp}
 #print(domain_dict)
-
 #data_frame = pandas.DataFrame(domain_dict)
-
 #data_frame.to_csv(ver.cartoon + '.csv')
-
+#--------------------------------------------------
 from xml.etree.ElementTree import Element as ele, SubElement as subele
 import xml.etree.ElementTree as xee
 
@@ -262,3 +194,5 @@ mydata.write(ver.cartoon + ".xml",  # Serie!
              encoding='utf-8', method="xml")
 # \/ this prints the same as saved below ^.
 print(mydata)
+
+
