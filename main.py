@@ -197,7 +197,7 @@ for i in range(len(ver.ep_links)):
     cname.append(a[-1].name)
     nextp.append(a[-1].next)
 
-    time.sleep(0.5)
+    #time.sleep(0.5)
 
 #import pandas
 
@@ -211,21 +211,25 @@ domain_dict = {'Mp4 URLs': vurls, 'Episode': cname, 'Next C.': nextp}
 #data_frame.to_csv(ver.cartoon + '.csv')
 
 from xml.etree.ElementTree import Element as ele, SubElement as subele
-#from ElementTree_pretty import prettify
+import xml.etree.ElementTree as xee
 
 inputLink = '.mp4'  # It's parameter of funct.
-top = 'playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1"'
-playlist = ele(top)
+#top = 'playlist'
+playlist = ele('playlist')  # (top)
+playlist.set('xmlns', "http://xspf.org/ns/0/")
+playlist.set('xmlns:vlc', "http://www.videolan.org/vlc/playlist/ns/0/")
+playlist.set('version', "1")
 list_rep = subele(playlist, 'title')
 list_rep.text = "Lista de reproducción"
 
-play_list = subele(playlist, 'trackList')
+playlist = subele(playlist, 'trackList')
 # repetir desde aqui ----- \/ , iterations.
-pista = subele(play_list, 'track')  # TRACK
+pista = subele(playlist, 'track')  # TRACK
 lugar = subele(pista, 'location')
 lugar.text = inputLink  #TODO def parameter.
-ext_app = 'extension application="http://www.videolan.org/vlc/playlist/0"'
-extensionapp = subele(pista, ext_app)
+ext_app = "http://www.videolan.org/vlc/playlist/0"
+extensionapp = subele(pista, 'extension')
+extensionapp.set('application', ext_app)
 
 vlc_id = subele(extensionapp, 'vlc:id')
 vlc_id.text = '0'  # IMPORTANT, Nro track!!
@@ -238,9 +242,17 @@ extensionapp_oft = subele(play_list, ext_app)
 # items:
 # <vlc:item tid="nro_idex_list_inputLink"/>
 # for...
-trackid = None
+trackid = 'None'
 #TODO trackid = position.
 inside_i = 'vlc:item tid="' + trackid + '"/'
 vlc_item = subele(extensionapp_oft, inside_i)
 
 print(playlist)  # print prittify(playlist)
+
+#print(etree.tostring(playlist, encoding='unicode', pretty_print=True))
+# create a new XML file with the results
+mydata = xee.tostring(playlist)
+print(playlist)
+print(mydata)
+myfile = open("megatry.xml", "w")
+#myfile.write(mydata)
