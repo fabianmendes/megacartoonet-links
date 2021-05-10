@@ -98,7 +98,7 @@ for i in range(len(aux_crl)):
         aaa.append(aux_crl[i][j])
     aa.append(aaa)
 chapters_list = []
-print("Nro de Capitulos:", len(aa))
+print("Nro de Capitulos:", len(aa)-1)
 
 
 for z in range(len(aa) -1):
@@ -156,18 +156,22 @@ list_rep.text = "Lista de reproducción"
 
 play_list = subele(playlist, 'trackList')
 # repetir desde aqui ----- \/ , iterations.
-pista = subele(play_list, 'track')  # TRACK
-lugar = subele(pista, 'location')
-lugar.text = inputLink  #TODO def parameter.
-ext_app = "http://www.videolan.org/vlc/playlist/0"
-extensionapp = subele(pista, 'extension')
-extensionapp.set('application', ext_app)
+# def vlcPlaylist(convert):
+#               ↓ (convert.episodes)
+for i in range(len(ver.episodes)):
+    inputLink = ver.episodes[i].vurl
+    pista = subele(play_list, 'track')  # TRACK
+    lugar = subele(pista, 'location')
+    lugar.text = inputLink  #TODO def parameter.
+    ext_app = "http://www.videolan.org/vlc/playlist/0"
+    extensionapp = subele(pista, 'extension')
+    extensionapp.set('application', ext_app)
 
-vlc_id = subele(extensionapp, 'vlc:id')
-vlc_id.text = '0'  # IMPORTANT, Nro track!!
-# TODO ^  position of the list!!
-vlc_opt = subele(extensionapp, 'vlc:option')
-vlc_opt.text = 'network-caching=1000'
+    vlc_id = subele(extensionapp, 'vlc:id')
+    vlc_id.text = str(i)  # IMPORTANT, Nro track!!
+    # TODO ^  position of the list!!
+    vlc_opt = subele(extensionapp, 'vlc:option')
+    vlc_opt.text = 'network-caching=1000'
 
 # --- extension (o)ut o(f) trackLis(t): ~~~|
 extensionapp_oft = subele(playlist, 'extension')
@@ -175,24 +179,22 @@ extensionapp_oft.set('application', ext_app)
 # items:
 # <vlc:item tid="nro_idex_list_inputLink"/>
 # for...
-trackid = 'None'
+for trackid in range(len(ver.episodes)):
+#trackid = 'None'
 #TODO trackid = position.
-inside_i = 'vlc:item tid="' + trackid + '"'
-vlc_item = subele(extensionapp_oft, inside_i)
+    inside_i = 'vlc:item tid="' + str(trackid) + '"'
+    vlc_item = subele(extensionapp_oft, inside_i)
 
 print(playlist)  # print prittify(playlist)
-
-#print(etree.tostring(playlist, encoding='unicode', pretty_print=True))
-# create a new XML file with the results
+# create a new XML file with the results: ↓
 
 #tree = ET.ElementTree(vehicles)
 #tree.write("vehicle_file.xml", xml_declaration=True, encoding='utf-8', method="xml")
 # ^ code from https://norwied.wordpress.com/2013/08/27/307/
 mydata = xee.ElementTree(playlist)
-mydata.write(ver.cartoon + ".xml",  # Serie!
+mydata.write(ver.cartoon + ".xspf",  # nameSerie
              xml_declaration=True,
              encoding='utf-8', method="xml")
-# \/ this prints the same as saved below ^.
-print(mydata)
+#print(mydata)  # it prints xeEtEt object...
 
 
