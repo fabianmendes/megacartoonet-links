@@ -26,17 +26,23 @@ class Serie():
         def __init__(self, dictionary):
 
             self.name = dictionary['title']  # name of dictionary.
+
             #Serie.addEpisode(self.name)
             # TODO save EPISODE name into "<title>"
             # TODO save number of chapter as well.
+            # TODO(is it possible save the Ep.Nº?)
             # TODO extract the brief→comment/note
-            # TODO is it possible save the Ep.Nº?
-            # TODO and add the Ep's image! 
+            # TODO and add the Ep's image!
             #self.vurl = dictionary['value']
 
             self.vurl, self.next = webLink(dictionary['href'])
             #       ".mp4" link <str>, next-post url <str>.
             #self.next = dictionary['href']
+
+            self.img_cover = "" # cover image!
+            self.chap_nums = "  # listing cap."
+            self.brief_snp = "" # sinopsis ep.
+        # <trackNum>1</trackNum> <annotation>
 
 
 def clean4Dict(lista):
@@ -52,18 +58,23 @@ def clean4Dict(lista):
     return dict_line
 
 
-def createDict(raw_list):
+def createDict(raw_list, num = None):
     '''raw_ soup.find("
     '''
     raw_line = str(raw_list).split(">")
 
     desire_line = raw_line[0].split(" ")
+    if desire_line[0] == "<input":
+        num = raw_line[-1].replace("</a", "")
+        # to get chapter number for later.
     del desire_line[0]  # deletes "<dType"
 
     dict_line = clean4Dict(desire_line)
     #print(dict_line)
     #       ".mp4" link <str>, next-post url <str>.
-
+    
+    if num != None:
+        dict_line["num"] = num  # of chapter/s.
     #return dict_line['value'], dict_line['href']
     return dict_line  #dictionary
 
@@ -75,9 +86,18 @@ def webLink(web_link):
     main_in = soup.find("input", attrs={"type": "hidden"})
 
     nextpost = soup.find("a", attrs={"class": "next"})
+    
+    dict_main = createDict(main_in)
+    return dict_main["value"], dict_main["num"],\
+           createDict(nextpost)["href"]
 
-    return createDict(main_in)["value"], createDict(nextpost)["href"]
 
+
+def extractMetadata(link):
+
+
+
+    return
 
 # LIMPIEZA DE CAPITULOS con el mismo link del 1er capitulo.
 chapters_raw = soup.find("ul", attrs={"class": "video-series-list list-inline"})
@@ -200,4 +220,5 @@ mydata.write(ver.cartoon + ".xspf",  # nameSerie
              xml_declaration=True,
              encoding='utf-8', method="xml")
 #print(mydata)  # it prints xeEtEt object...
+
 
