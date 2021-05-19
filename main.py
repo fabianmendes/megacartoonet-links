@@ -18,7 +18,8 @@ class Serie():
         self.cartoon = ''  # <type str>
         self.ep_links= ()  # <type tuple of dicts>
         self.episodes= []  # <type set of objects>
-
+        # TODO save cartoon as "<album>"
+        # TODO also, search for year&artist
 
     class Episode():
 
@@ -26,7 +27,11 @@ class Serie():
 
             self.name = dictionary['title']  # name of dictionary.
             #Serie.addEpisode(self.name)
-
+            # TODO save EPISODE name into "<title>"
+            # TODO save number of chapter as well.
+            # TODO extract the brief→comment/note
+            # TODO is it possible save the Ep.Nº?
+            
             #self.vurl = dictionary['value']
 
             self.vurl, self.next = webLink(dictionary['href'])
@@ -59,7 +64,6 @@ def createDict(raw_list):
     #print(dict_line)
     #       ".mp4" link <str>, next-post url <str>.
 
-    # TODO method para hallar el next-post.
     #return dict_line['value'], dict_line['href']
     return dict_line  #dictionary
 
