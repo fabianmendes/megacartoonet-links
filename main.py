@@ -64,17 +64,12 @@ def createDict(raw_list, num = None):
     raw_line = str(raw_list).split(">")
 
     desire_line = raw_line[0].split(" ")
-    if desire_line[0] == "<input":
-        num = raw_line[-1].replace("</a", "")
-        # to get chapter number for later.
     del desire_line[0]  # deletes "<dType"
 
     dict_line = clean4Dict(desire_line)
     #print(dict_line)
     #       ".mp4" link <str>, next-post url <str>.
-    
-    if num != None:
-        dict_line["num"] = num  # of chapter/s.
+
     #return dict_line['value'], dict_line['href']
     return dict_line  #dictionary
 
@@ -84,18 +79,23 @@ def webLink(web_link):
     # print(r.status_code)
     soup = BeautifulSoup(r.content, "html.parser")
     main_in = soup.find("input", attrs={"type": "hidden"})
-
+    ch_n = main_in.text  # chapter number/s.
     nextpost = soup.find("a", attrs={"class": "next"})
-    
-    dict_main = createDict(main_in)
-    return dict_main["value"], dict_main["num"],\
+
+    return createDict(main_in)["value"], ch_n, \
            createDict(nextpost)["href"]
 
 
 
 def extractCoverbrief(link):
+    r = requests.get(link)
+    soup = BeautifulSoup(r.content, "html.parse")
+    img_line = soup.find("img", attrs={"class": "fp-splash"})
+    img_path = createDict(img_line)["src"]
+    sinopsis = soup.find("", attrs={"class": ""}).text
+    sinopsis = sinopsis.split(" ")
+    del sinopsis[0]  # deletes "EPISODES:"
 
-    
 
     return
 
