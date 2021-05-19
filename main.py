@@ -31,7 +31,7 @@ class Serie():
             # TODO save number of chapter as well.
             # TODO extract the brief→comment/note
             # TODO is it possible save the Ep.Nº?
-            
+            # TODO and add the Ep's image! 
             #self.vurl = dictionary['value']
 
             self.vurl, self.next = webLink(dictionary['href'])
@@ -200,5 +200,4 @@ mydata.write(ver.cartoon + ".xspf",  # nameSerie
              xml_declaration=True,
              encoding='utf-8', method="xml")
 #print(mydata)  # it prints xeEtEt object...
-
 
