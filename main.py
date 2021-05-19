@@ -21,12 +21,14 @@ class Serie:
         self.episodes= []  # <type set of objects>
         # TODO also, search for year&artist
 
+
     class Episode:
 
         def __init__(self, dictionary):
 
             self.name = dictionary['title']  # name of dictionary.
 
+            #self.vurl = dictionary['value']
             self.vurl, self.next = webLink(dictionary['href'])
         # ".mp4" link <str>, next-post url <str>.
 
@@ -86,7 +88,7 @@ def extractCoverbrief(link):
 
     return img_path, sinopsis
 
-
+  
 # LIMPIEZA DE CAPITULOS con el mismo link del 1er capitulo.
 chapters_raw = soup.find("ul", attrs={"class": "video-series-list list-inline"})
 #print(chapters_raw)
@@ -110,7 +112,7 @@ for i in range(len(aux_crl)):
         aaa.append(aux_crl[i][j])
     aa.append(aaa)
 chapters_list = []
-print("Nro de Capitulos:", len(aa))
+print("Nro de Capitulos:", len(aa)-1)
 
 
 for z in range(len(aa)-1):
@@ -122,7 +124,7 @@ for z in range(len(aa)-1):
 
     chapters_list.append(dict_aux)
 
-#print(aa[z])
+#print(aa)
 #print(chapters_list)
 
 ver = Serie()
