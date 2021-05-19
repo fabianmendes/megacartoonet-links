@@ -34,12 +34,10 @@ class Serie:
             # TODO(is it possible save the Ep.Nº?)
             # TODO extract the brief→comment/note
             # TODO and add the Ep's image!
-            #self.vurl = dictionary['value']
 
             self.vurl, self.next = webLink(dictionary['href'])
         # ".mp4" link <str>, next-post url <str>.
-            
-            #self.next = dictionary['href']
+
             ic, bf = extractCoverbrief(self.vurl)
             self.img_cover = ic  # cover image!
             self.brief_snp = bf  # sinopsis ep.
@@ -82,7 +80,7 @@ def webLink(web_link):
     # print(r.status_code)
     soup = BeautifulSoup(r.content, "html.parser")
     main_in = soup.find("input", attrs={"type": "hidden"})
-    #ch_n = main_in.text  # chapter number/s.
+
     nextpost = soup.find("a", attrs={"class": "next"})
 
     return createDict(main_in)["value"],\
@@ -137,7 +135,7 @@ for z in range(len(aa) - 1):
     dict_aux[aa[z][1][0]] = aa[z][1][1]  # title= name (chapter)
     dict_aux["num"] = numbers_chapter[z] # chapter number. TODO?
     chapters_list.append(dict_aux)
-    
+
 #print(aa)
 #print(chapters_list)
 
