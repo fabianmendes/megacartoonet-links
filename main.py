@@ -35,13 +35,13 @@ class Serie():
             # TODO and add the Ep's image!
             #self.vurl = dictionary['value']
 
-            self.vurl, self.next = webLink(dictionary['href'])
-            #       ".mp4" link <str>, next-post url <str>.
+            self.vurl, self.chap_nums, self.next = webLink(dictionary['href'])
+        # ".mp4" link <str>,^chpter/s, next-post url <str>.
             #self.next = dictionary['href']
 
-            self.img_cover = "" # cover image!
-            self.chap_nums = "  # listing cap."
-            self.brief_snp = "" # sinopsis ep.
+            i, b = extractCoverbrief(self.vurl)
+            self.img_cover = i # cover image!
+            self.brief_snp = b # sinopsis ep.
         # <trackNum>1</trackNum> <annotation>
 
 
@@ -93,9 +93,9 @@ def webLink(web_link):
 
 
 
-def extractMetadata(link):
+def extractCoverbrief(link):
 
-
+    
 
     return
 
