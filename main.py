@@ -11,7 +11,8 @@ r = requests.get(web_url)
 print(r.status_code)
 soup = BeautifulSoup(r.content, "html.parser")
 
-class Serie():
+
+class Serie:
 
     def __init__(self):
 
@@ -21,7 +22,7 @@ class Serie():
         # TODO save cartoon as "<album>"
         # TODO also, search for year&artist
 
-    class Episode():
+    class Episode:
 
         def __init__(self, dictionary):
 
@@ -37,12 +38,12 @@ class Serie():
 
             self.vurl, self.chap_nums, self.next = webLink(dictionary['href'])
         # ".mp4" link <str>,^chpter/s, next-post url <str>.
+            # <trackNum>1</trackNum> <annotation>
             #self.next = dictionary['href']
+            ic, bf = extractCoverbrief(self.vurl)
+            self.img_cover = ic  # cover image!
+            self.brief_snp = bf  # sinopsis ep.
 
-            i, b = extractCoverbrief(self.vurl)
-            self.img_cover = i # cover image!
-            self.brief_snp = b # sinopsis ep.
-        # <trackNum>1</trackNum> <annotation>
 
 
 def clean4Dict(lista):
@@ -92,12 +93,10 @@ def extractCoverbrief(link):
     soup = BeautifulSoup(r.content, "html.parse")
     img_line = soup.find("img", attrs={"class": "fp-splash"})
     img_path = createDict(img_line)["src"]
-    sinopsis = soup.find("", attrs={"class": ""}).text
-    sinopsis = sinopsis.split(" ")
-    del sinopsis[0]  # deletes "EPISODES:"
+    sinopsis = soup.find("div", attrs={"class": "item-content toggled"}).text
+    
+    return img_path, sinopsis
 
-
-    return
 
 # LIMPIEZA DE CAPITULOS con el mismo link del 1er capitulo.
 chapters_raw = soup.find("ul", attrs={"class": "video-series-list list-inline"})
