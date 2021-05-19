@@ -19,7 +19,7 @@ class Serie:
         self.cartoon = ''  # <type str>
         self.ep_links= ()  # <type tuple of dicts>
         self.episodes= []  # <type set of objects>
-        # TODO save cartoon as "<album>"
+        # save cartoon as "<album>"
         # TODO also, search for year&artist
 
     class Episode:
@@ -29,20 +29,20 @@ class Serie:
             self.name = dictionary['title']  # name of dictionary.
 
             #Serie.addEpisode(self.name)
-            # TODO save EPISODE name into "<title>"
+            # save EPISODE name into "<title>"
             #  save number of chapter as well.
             # (is it possible save the Ep.Nº?)
             #  extract the brief→comment/note
-            # TODO and add the Ep's image!
+            # and add the Ep's image!
 
             self.vurl, self.next = webLink(dictionary['href'])
         # ".mp4" link <str>, next-post url <str>.
 
-            ic, bf = extractCoverbrief(self.vurl)
+            ic, bf = extractCoverbrief(dictionary['href'])
             self.img_cover = ic  # cover image!
             self.brief_snp = bf  # sinopsis ep.
 
-            self.chap_nums = dictionary["num"]
+            #self.chap_nums = dictionary["num"]
             # <trackNum>1</trackNum> <annotation>
 
 
@@ -52,6 +52,7 @@ def clean4Dict(lista):
     aux = []
 
     for i in range(len(lista)):
+
         aux = lista[i].split('=')
         aux[1] = aux[1].replace('"', '')
 
@@ -83,14 +84,12 @@ def webLink(web_link):
 
     nextpost = soup.find("a", attrs={"class": "next"})
 
-    return createDict(main_in)["value"],\
-           createDict(nextpost)["href"]
-
+    return createDict(main_in)["value"], createDict(nextpost)["href"]
 
 
 def extractCoverbrief(link):
     r = requests.get(link)
-    soup = BeautifulSoup(r.content, "html.parse")
+    soup = BeautifulSoup(r.content, "html.parser")
     img_line = soup.find("img", attrs={"class": "fp-splash"})
     img_path = createDict(img_line)["src"]
     sinopsis = soup.find("div", attrs={"class": "item-content toggled"}).text
@@ -104,8 +103,8 @@ chapters_raw = soup.find("ul", attrs={"class": "video-series-list list-inline"})
 chapters_rawlist= str(chapters_raw).split('<li><a ')
 del chapters_rawlist[0]
 
-numbers_chapter = chapters_raw.text
-numbers_chapter = numbers_chapter.split(" ")
+#numbers_chapter = chapters_raw.text
+#numbers_chapter = numbers_chapter.split(" ")
 
 aux_crl = []
 for i in range(len(chapters_rawlist)):
@@ -124,23 +123,23 @@ for i in range(len(aux_crl)):
         aaa.append(aux_crl[i][j])
     aa.append(aaa)
 chapters_list = []
-print("Nro de Capitulos:", len(aa)-1)
+print("Nro de Capitulos:", len(aa))
 
 
-for z in range(len(aa) - 1):
+for z in range(len(aa)-1):
     del aa[z][0]
     dict_aux = {}
 
     dict_aux[aa[z][0][0]] = aa[z][0][1]  # href = url (link post)
     dict_aux[aa[z][1][0]] = aa[z][1][1]  # title= name (chapter)
-    dict_aux["num"] = numbers_chapter[z] # chapter number. TODO?
+    #dict_aux["num"] = numbers_chapter[z] # chapter number. TODO?
     chapters_list.append(dict_aux)
 
-#print(aa)
+#print(aa[z])
 #print(chapters_list)
 
 ver = Serie()
-ver.cartoon = "Samurai Jack"
+ver.cartoon = "Samurai Jack" + "-copy"
 ver.ep_links= tuple(chapters_list)
 #print(ver.ep_links)
 
@@ -151,6 +150,7 @@ for i in range(len(ver.ep_links)):
 
     ver.episodes.append(ver.Episode(ex_dato))
     a = ver.episodes
+
     #print(a[-1])
     #print(a[-1].vurl + "\t" + a[-1].name + " " + a[-1].next)
 
@@ -185,7 +185,7 @@ play_list = subele(playlist, 'trackList')
 # repetir desde aqui ----- \/ , iterations.
 # def vlcPlaylist(convert):
 #               ↓ (convert.episodes)
-for i in range(len(ver.episodes)):
+for i in range(len(ver.episodes) -1):
     inputLink = ver.episodes[i].vurl
     pista = subele(play_list, 'track')  # TRACK
     lugar = subele(pista, 'location')
@@ -197,7 +197,8 @@ for i in range(len(ver.episodes)):
     album.text = ver.cartoon
 
     track_num = subele(pista, 'trackNum')
-    track_num.text = ver.episodes[i].chap_nums
+    track_num.text = str(i +1)
+    #track_num.text = ver.episodes[i].chap_nums
     comment = subele(pista, 'annotation')
     comment.text = ver.episodes[i].brief_snp
     cover = subele(pista, "image")
@@ -215,11 +216,12 @@ for i in range(len(ver.episodes)):
 
 # --- extension (o)ut o(f) trackLis(t): ~~~|
 extensionapp_oft = subele(playlist, 'extension')
+ext_app = "http://www.videolan.org/vlc/playlist/0"
 extensionapp_oft.set('application', ext_app)
 # items:
 # <vlc:item tid="nro_idex_list_inputLink"/>
 # for...
-for trackid in range(len(ver.episodes)):
+for trackid in range(len(ver.episodes) -1):
 #trackid = 'None'
 #TODO trackid = position.
     inside_i = 'vlc:item tid="' + str(trackid) + '"'
