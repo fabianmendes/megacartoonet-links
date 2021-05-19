@@ -30,9 +30,9 @@ class Serie:
 
             #Serie.addEpisode(self.name)
             # TODO save EPISODE name into "<title>"
-            # TODO save number of chapter as well.
-            # TODO(is it possible save the Ep.Nº?)
-            # TODO extract the brief→comment/note
+            #  save number of chapter as well.
+            # (is it possible save the Ep.Nº?)
+            #  extract the brief→comment/note
             # TODO and add the Ep's image!
 
             self.vurl, self.next = webLink(dictionary['href'])
@@ -190,6 +190,19 @@ for i in range(len(ver.episodes)):
     pista = subele(play_list, 'track')  # TRACK
     lugar = subele(pista, 'location')
     lugar.text = inputLink  #TODO def parameter.
+    
+    title = subele(pista, 'title')
+    title.text = ver.episodes[i].name
+    album = subele(pista, 'album')
+    album.text = ver.cartoon
+    
+    track_num = subele(pista, 'trackNum')
+    track_num.text = ver.episodes[i].chap_nums
+    comment = subele(pista, 'annotation')
+    comment.text = ver.episodes[i].brief_snp
+    cover = subele(pista, "image")
+    cover.text = ver.episodes[i].img_cover
+    
     ext_app = "http://www.videolan.org/vlc/playlist/0"
     extensionapp = subele(pista, 'extension')
     extensionapp.set('application', ext_app)
