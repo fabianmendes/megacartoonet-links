@@ -36,14 +36,16 @@ class Serie:
             # TODO and add the Ep's image!
             #self.vurl = dictionary['value']
 
-            self.vurl, self.chap_nums, self.next = webLink(dictionary['href'])
-        # ".mp4" link <str>,^chpter/s, next-post url <str>.
-            # <trackNum>1</trackNum> <annotation>
+            self.vurl, self.next = webLink(dictionary['href'])
+        # ".mp4" link <str>, next-post url <str>.
+            
             #self.next = dictionary['href']
             ic, bf = extractCoverbrief(self.vurl)
             self.img_cover = ic  # cover image!
             self.brief_snp = bf  # sinopsis ep.
 
+            self.chap_nums = dictionary["num"]
+            # <trackNum>1</trackNum> <annotation>
 
 
 def clean4Dict(lista):
@@ -80,10 +82,10 @@ def webLink(web_link):
     # print(r.status_code)
     soup = BeautifulSoup(r.content, "html.parser")
     main_in = soup.find("input", attrs={"type": "hidden"})
-    ch_n = main_in.text  # chapter number/s.
+    #ch_n = main_in.text  # chapter number/s.
     nextpost = soup.find("a", attrs={"class": "next"})
 
-    return createDict(main_in)["value"], ch_n, \
+    return createDict(main_in)["value"],\
            createDict(nextpost)["href"]
 
 
@@ -94,7 +96,7 @@ def extractCoverbrief(link):
     img_line = soup.find("img", attrs={"class": "fp-splash"})
     img_path = createDict(img_line)["src"]
     sinopsis = soup.find("div", attrs={"class": "item-content toggled"}).text
-    
+
     return img_path, sinopsis
 
 
@@ -103,6 +105,9 @@ chapters_raw = soup.find("ul", attrs={"class": "video-series-list list-inline"})
 #print(chapters_raw)
 chapters_rawlist= str(chapters_raw).split('<li><a ')
 del chapters_rawlist[0]
+
+numbers_chapter = chapters_raw.text
+numbers_chapter = numbers_chapter.split(" ")
 
 aux_crl = []
 for i in range(len(chapters_rawlist)):
@@ -124,14 +129,15 @@ chapters_list = []
 print("Nro de Capitulos:", len(aa)-1)
 
 
-for z in range(len(aa) -1):
+for z in range(len(aa) - 1):
     del aa[z][0]
     dict_aux = {}
 
     dict_aux[aa[z][0][0]] = aa[z][0][1]  # href = url (link post)
     dict_aux[aa[z][1][0]] = aa[z][1][1]  # title= name (chapter)
+    dict_aux["num"] = numbers_chapter[z] # chapter number. TODO?
     chapters_list.append(dict_aux)
-
+    
 #print(aa)
 #print(chapters_list)
 
