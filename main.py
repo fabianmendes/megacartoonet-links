@@ -19,7 +19,6 @@ class Serie:
         self.cartoon = ''  # <type str>
         self.ep_links= ()  # <type tuple of dicts>
         self.episodes= []  # <type set of objects>
-        # save cartoon as "<album>"
         # TODO also, search for year&artist
 
     class Episode:
@@ -28,22 +27,12 @@ class Serie:
 
             self.name = dictionary['title']  # name of dictionary.
 
-            #Serie.addEpisode(self.name)
-            # save EPISODE name into "<title>"
-            #  save number of chapter as well.
-            # (is it possible save the Ep.Nº?)
-            #  extract the brief→comment/note
-            # and add the Ep's image!
-
             self.vurl, self.next = webLink(dictionary['href'])
         # ".mp4" link <str>, next-post url <str>.
 
             ic, bf = extractCoverbrief(dictionary['href'])
             self.img_cover = ic  # cover image!
             self.brief_snp = bf  # sinopsis ep.
-
-            #self.chap_nums = dictionary["num"]
-            # <trackNum>1</trackNum> <annotation>
 
 
 def clean4Dict(lista):
@@ -93,6 +82,7 @@ def extractCoverbrief(link):
     img_line = soup.find("img", attrs={"class": "fp-splash"})
     img_path = createDict(img_line)["src"]
     sinopsis = soup.find("div", attrs={"class": "item-content toggled"}).text
+	#sinopsis = sinopsis.split("p>")
 
     return img_path, sinopsis
 
@@ -102,9 +92,6 @@ chapters_raw = soup.find("ul", attrs={"class": "video-series-list list-inline"})
 #print(chapters_raw)
 chapters_rawlist= str(chapters_raw).split('<li><a ')
 del chapters_rawlist[0]
-
-#numbers_chapter = chapters_raw.text
-#numbers_chapter = numbers_chapter.split(" ")
 
 aux_crl = []
 for i in range(len(chapters_rawlist)):
@@ -132,14 +119,14 @@ for z in range(len(aa)-1):
 
     dict_aux[aa[z][0][0]] = aa[z][0][1]  # href = url (link post)
     dict_aux[aa[z][1][0]] = aa[z][1][1]  # title= name (chapter)
-    #dict_aux["num"] = numbers_chapter[z] # chapter number. TODO?
+
     chapters_list.append(dict_aux)
 
 #print(aa[z])
 #print(chapters_list)
 
 ver = Serie()
-ver.cartoon = "Samurai Jack" + "-copy"
+ver.cartoon = "Samurai Jack"
 ver.ep_links= tuple(chapters_list)
 #print(ver.ep_links)
 
@@ -198,7 +185,7 @@ for i in range(len(ver.episodes) -1):
 
     track_num = subele(pista, 'trackNum')
     track_num.text = str(i +1)
-    #track_num.text = ver.episodes[i].chap_nums
+    
     comment = subele(pista, 'annotation')
     comment.text = ver.episodes[i].brief_snp
     cover = subele(pista, "image")
@@ -222,8 +209,7 @@ extensionapp_oft.set('application', ext_app)
 # <vlc:item tid="nro_idex_list_inputLink"/>
 # for...
 for trackid in range(len(ver.episodes) -1):
-#trackid = 'None'
-#TODO trackid = position.
+
     inside_i = 'vlc:item tid="' + str(trackid) + '"'
     vlc_item = subele(extensionapp_oft, inside_i)
 
