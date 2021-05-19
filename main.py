@@ -83,9 +83,10 @@ def extractCoverbrief(link):
     soup = BeautifulSoup(r.content, "html.parser")
     img_line = soup.find("img", attrs={"class": "fp-splash"})
     img_path = createDict(img_line)["src"]
-    sinopsis = soup.find("div", attrs={"class": "item-content toggled"}).text
-	#sinopsis = sinopsis.split("p>")
-
+    sinopsis_aux = soup.find("div", attrs={"class": "item-content toggled"})
+    sinopsis = str(sinopsis_aux).split('p>')
+    sinopsis = sinopsis[1].replace("</", "")
+    #print(sinopsis)
     return img_path, sinopsis
 
   
