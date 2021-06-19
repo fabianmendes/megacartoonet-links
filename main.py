@@ -213,7 +213,7 @@ extensionapp_oft.set('application', ext_app)
 # items:
 # <vlc:item tid="nro_idex_list_inputLink"/>
 # for...
-for trackid in range(len(ver.episodes) -1):
+for trackid in range(len(ver.episodes)):
 
     inside_i = 'vlc:item tid="' + str(trackid) + '"'
     vlc_item = subele(extensionapp_oft, inside_i)
